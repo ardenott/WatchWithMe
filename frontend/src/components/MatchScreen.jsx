@@ -2,8 +2,6 @@ import { useEffect } from 'react';
 import { imageUrl } from '../utils/movie.js';
 
 export function MatchScreen({ movie, onPlayAgain, isAdmin, users = [] }) {
-  const audioRef = useRef(null);
-
   useEffect(() => {
     // Subtle vibration on mobile
     if (navigator.vibrate) navigator.vibrate([100, 50, 100]);
