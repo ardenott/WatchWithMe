@@ -110,7 +110,7 @@ export function initDatabase() {
     'ALTER TABLE plex_config ADD COLUMN admin_username TEXT',
     'ALTER TABLE plex_config ADD COLUMN admin_password_hash TEXT',
     'ALTER TABLE plex_config ADD COLUMN admin_session_token TEXT',
-    `ALTER TABLE sessions ADD COLUMN last_activity_at INTEGER DEFAULT (strftime('%s', 'now'))`,
+    'ALTER TABLE sessions ADD COLUMN last_activity_at INTEGER',
   ]) {
     try { db.exec(col); } catch {}
   }
