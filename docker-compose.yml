@@ -1,0 +1,35 @@
+services:
+  watchwithme:
+    build: .
+    container_name: watchwithme
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    volumes:
+      - watchwithme-data:/data
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - DATA_DIR=/data
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:3000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
+    develop:
+      watch:
+        # Sync backend source into the container and restart Node
+        - action: sync+restart
+          path: ./backend/src
+          target: /app/backend/src
+        # Rebuild the image when dependencies change
+        - action: rebuild
+          path: ./backend/package.json
+        # Rebuild the image when any frontend file changes (Vite must re-run)
+        - action: rebuild
+          path: ./frontend
+
+volumes:
+  watchwithme-data:
+    driver: local
