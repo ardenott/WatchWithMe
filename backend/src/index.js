@@ -56,7 +56,7 @@ app.use(express.json());
 
 // API Routes
 app.use('/api/admin', adminRouter);
-app.use('/api/auth', requireAdmin, authRouter);
+app.use('/api/auth', authRouter);
 app.use('/api/sessions', sessionsRouter);
 app.use('/api/movies', requireAdmin, moviesRouter);
 app.use('/api/proxy', proxyRouter);

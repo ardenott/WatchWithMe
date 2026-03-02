@@ -22,6 +22,7 @@ export function AppProvider({ children }) {
     } catch {
       setPlexConfigured(false);
       setAdminLoggedIn(false);
+      setHasAdminPassword(false);
     } finally {
       setLoading(false);
     }

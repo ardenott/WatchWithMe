@@ -13,10 +13,11 @@ import {
   upsertMovies,
 } from '../db/index.js';
 import { fetchAllMovies as fetchMovies } from '../services/plex.js';
+import { requireAdmin } from '../middleware/requireAdmin.js';
 
 const router = Router();
 
-// GET /api/auth/status - Check if Plex is configured
+// GET /api/auth/status - Check if Plex is configured (public)
 router.get('/status', (req, res) => {
   const config = getPlexConfig();
   res.json({
@@ -27,7 +28,7 @@ router.get('/status', (req, res) => {
 });
 
 // POST /api/auth/pin - Request a Plex PIN for OAuth
-router.post('/pin', async (req, res) => {
+router.post('/pin', requireAdmin, async (req, res) => {
   try {
     const config = getPlexConfig();
     const pin = await requestPin(config.client_id);
@@ -41,7 +42,7 @@ router.post('/pin', async (req, res) => {
 });
 
 // GET /api/auth/pin/:pinId - Poll for PIN authentication
-router.get('/pin/:pinId', async (req, res) => {
+router.get('/pin/:pinId', requireAdmin, async (req, res) => {
   try {
     const config = getPlexConfig();
     const pinData = await checkPin(config.client_id, req.params.pinId);
@@ -69,7 +70,7 @@ router.get('/pin/:pinId', async (req, res) => {
 });
 
 // POST /api/auth/server - Save the selected Plex server and sync library
-router.post('/server', async (req, res) => {
+router.post('/server', requireAdmin, async (req, res) => {
   const { machineIdentifier, connections, serverName } = req.body;
   if (!machineIdentifier || !connections) {
     return res.status(400).json({ error: 'Missing server info' });
@@ -104,7 +105,7 @@ router.post('/server', async (req, res) => {
 });
 
 // POST /api/auth/library - Set the library to use
-router.post('/library', async (req, res) => {
+router.post('/library', requireAdmin, async (req, res) => {
   const { librarySectionId } = req.body;
   if (!librarySectionId) {
     return res.status(400).json({ error: 'Missing library section ID' });
@@ -129,7 +130,7 @@ router.post('/library', async (req, res) => {
 });
 
 // POST /api/auth/logout - Clear Plex configuration
-router.post('/logout', (req, res) => {
+router.post('/logout', requireAdmin, (req, res) => {
   updatePlexConfig({
     auth_token: null,
     server_url: null,
