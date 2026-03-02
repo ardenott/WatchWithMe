@@ -14,7 +14,6 @@ import { timingSafeEqual } from 'crypto';
 const router = Router();
 
 const COOKIE_NAME = 'watchwithme_admin';
-const IS_PROD = process.env.NODE_ENV === 'production';
 
 const loginLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
@@ -24,10 +23,10 @@ const loginLimiter = rateLimit({
   message: { error: 'Too many login attempts — try again later' },
 });
 
-function setAuthCookie(res, token) {
+function setAuthCookie(res, token, req) {
   res.cookie(COOKIE_NAME, token, {
     httpOnly: true,
-    secure: IS_PROD,
+    secure: req.secure,
     sameSite: 'strict',
     maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
     path: '/',
@@ -82,7 +81,7 @@ router.post('/setup', loginLimiter, async (req, res) => {
 
     const token = generateSessionToken();
     setAdminSessionToken(token);
-    setAuthCookie(res, token);
+    setAuthCookie(res, token, req);
 
     res.json({ message: 'Admin account created' });
   } catch (err) {
@@ -113,7 +112,7 @@ router.post('/login', loginLimiter, async (req, res) => {
 
     const token = generateSessionToken();
     setAdminSessionToken(token);
-    setAuthCookie(res, token);
+    setAuthCookie(res, token, req);
 
     res.json({ message: 'Logged in' });
   } catch (err) {
