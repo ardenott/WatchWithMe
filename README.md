@@ -42,15 +42,10 @@ Frontend: `http://localhost:5173` · Backend API: `http://localhost:3000`
 | `DATA_DIR` | `/data` | Directory for SQLite database |
 | `NODE_ENV` | `production` | Environment |
 
-## TrueNAS Deployment
-
-In TrueNAS Scale, create a new App using **Custom App** and point it at this docker-compose.yml. Mount a host path or dataset to `/data` for persistent storage.
-
 ## Architecture
 
 - **Backend**: Node.js + Express + Socket.io
 - **Frontend**: React + Vite (served by Express in production)
 - **Database**: SQLite (via better-sqlite3)
 - **Real-time**: Socket.io for user join/match events
-- **Plex Auth**: PIN-based OAuth (same pattern as Overseerr)
-- **Images**: Proxied server-side so the Plex token stays secure
+- **Plex Auth**: PIN-based OAuth
