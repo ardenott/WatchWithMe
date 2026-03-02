@@ -173,8 +173,8 @@ export async function proxyImage(serverUrl, authToken, imagePath, width = 300, h
       'X-Plex-Token': authToken,
       minSize: 1,
     },
-    responseType: 'stream',
+    responseType: 'arraybuffer',
     timeout: 15000,
   });
-  return { stream: res.data, contentType: res.headers['content-type'] };
+  return { buffer: Buffer.from(res.data), contentType: res.headers['content-type'] };
 }
